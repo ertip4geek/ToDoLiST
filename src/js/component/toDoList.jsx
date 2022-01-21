@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const ClassToDo = () => {
+const toDoList = () => {
 	let [listItems, setListItems] = useState([]);
 	let [task, setTask] = useState("");
 
 	const handleAddItem = () => {
 		setListItems([...listItems, task]);
+		setTask("");
 	};
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		// console.log(newTask);
-		// setNewTask("");
-		handleAddItem({
-			done: false,
-			id: (+new Date()).toString(),
-			task,
-		});
-	};
+	// SIN USAR
+	// const handleSubmit = (e) => {
+	// 	e.preventDefault();
+	// 	// console.log(newTask);
+	// 	// setNewTask("");
+	// 	handleAddItem({
+	// 		done: false,
+	// 		id: (+new Date()).toString(),
+	// 		task,
+	// 	});
+	// };
 
 	const onClickRemoveTask = (indexToDelete) => {
-		console.log(indexToDelete);
-		listItems.splice(indexToDelete, 1);
-		setListItems(listItems);
-		console.log(listItems);
+		setListItems(listItems.filter((x, y) => y != indexToDelete));
+
+		// console.log(indexToDelete);
+		// listItems.splice(indexToDelete, 1);
+		// setListItems(listItems);
+		// console.log(listItems);
 
 		// listItems.filter((_, index) => {
 		//console.log("Index", index);
@@ -44,7 +48,14 @@ const ClassToDo = () => {
 				type="text"
 				className="text"
 				value={task}
-				onChange={(e) => setTask(e.target.value)}
+				onKeyPress={(e) => {
+					if (e.key == "Enter") {
+						handleAddItem();
+					}
+				}}
+				onChange={(e) => {
+					setTask(e.target.value);
+				}}
 			/>
 			<button className="button" onClick={handleAddItem}>
 				Add
@@ -62,7 +73,9 @@ const ClassToDo = () => {
 				})}
 				{listItems.length ? (
 					<p>
-						<button className="button" onClick={onClickRemoveTask}>
+						<button
+							className="button"
+							onClick={() => setListItems([])}>
 							Delete all tasks
 						</button>
 					</p>
@@ -72,4 +85,4 @@ const ClassToDo = () => {
 	);
 };
 
-export default ClassToDo;
+export default toDoList;
