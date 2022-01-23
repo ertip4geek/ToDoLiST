@@ -25,11 +25,6 @@ const AddNewTask = (props) => {
 							value={task}
 							onChange={(e) => setTask(e.target.value)}
 						/>
-						{/* <button
-                            className="button green"
-                            disabled={newTask ? "" : "disabled"}>
-                            Add
-                        </button> */}
 					</div>
 				</div>
 			</form>

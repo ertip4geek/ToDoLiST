@@ -22,26 +22,7 @@ const toDoList = () => {
 
 	const onClickRemoveTask = (indexToDelete) => {
 		setListItems(listItems.filter((x, y) => y != indexToDelete));
-
-		// console.log(indexToDelete);
-		// listItems.splice(indexToDelete, 1);
-		// setListItems(listItems);
-		// console.log(listItems);
-
-		// listItems.filter((_, index) => {
-		//console.log("Index", index);
-		//console.log("itemToDelete", indexToDelete);
-		// 	// console.log(index);
-		// 	// console.log(listItems);
-		// 	//console.log("one at the time");
-		// 	index !== indexToDelete;
-		//console.log(updateListItems);
-		//setListItems(updateListItems);
 	};
-	// const checkItem = listItems.map((task) => (
-	// 	// <CheckBox key={task.id} data={task} onChange={onChangeStatus} />
-	// 	<button className="button green">X</button>
-	// ));
 	return (
 		<>
 			<input
@@ -65,8 +46,13 @@ const toDoList = () => {
 					return (
 						<div key={index}>
 							<p>{item}</p>
-							<button onClick={() => onClickRemoveTask(index)}>
-								X
+							<button>
+								{" "}
+								<i
+									className="fas fa-minus-circle right"
+									onClick={() =>
+										onClickRemoveTask(index)
+									}></i>
 							</button>
 						</div>
 					);

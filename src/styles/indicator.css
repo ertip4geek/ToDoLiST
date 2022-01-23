@@ -1,0 +1,12 @@
+.header {
+    width: 60%;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 2px 0 2px 0 black;
+}
+
+h3{
+    text-align: center;
+}
