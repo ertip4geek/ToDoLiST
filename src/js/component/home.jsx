@@ -6,7 +6,7 @@ import Rest from "./REST.jsx";
 const Home = () => {
 	return (
 		<>
-			<ToDoList />
+			<Rest />
 		</>
 	);
 };
