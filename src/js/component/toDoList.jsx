@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import propTypes from "prop-types";
 
-const toDoList = () => {
+const toDoList = (props) => {
 	let [listItems, setListItems] = useState([]);
 	let [task, setTask] = useState("");
 
@@ -38,7 +39,10 @@ const toDoList = () => {
 					setTask(e.target.value);
 				}}
 			/>
-			<button className="button" onClick={handleAddItem}>
+			<button
+				type="button"
+				className="btn btn-success"
+				onClick={handleAddItem}>
 				Add
 			</button>
 			<div className="todo-list">
@@ -49,7 +53,7 @@ const toDoList = () => {
 							<button>
 								{" "}
 								<i
-									className="fas fa-minus-circle right"
+									className="far fa-window-close"
 									onClick={() =>
 										onClickRemoveTask(index)
 									}></i>
@@ -60,15 +64,46 @@ const toDoList = () => {
 				{listItems.length ? (
 					<p>
 						<button
-							className="button"
+							type="button"
+							className="btn btn-info"
 							onClick={() => setListItems([])}>
 							Delete all tasks
 						</button>
 					</p>
 				) : null}
+
+				{/* // Counter
+				<div className="header">
+					<h3>
+						{`You have  
+					${props.item}  
+					${props.item === 1 ? " task" : " tasks"}`}
+					</h3>
+				</div> */}
 			</div>
 		</>
 	);
 };
 
+/// TESTING API FETCH
+// fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", requestOptions)
+// 	.then((response) => response.text())
+// 	.then((result) => console.log(result))
+// 	.catch((error) => console.log("error", error));
+
+// let myHeaders = new Headers();
+// myHeaders.append("Content-Type", "application/json");
+
+// let raw = JSON.stringify([]);
+
+// let requestOptions = {
+// 	method: "GET",
+// 	headers: myHeaders,
+// 	body: raw,
+// 	redirect: "follow",
+// };
+// COUNTER Props
+// toDoList.propTypes = {
+// 	item: propTypes.number,
+// };
 export default toDoList;
