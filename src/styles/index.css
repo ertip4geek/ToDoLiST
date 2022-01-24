@@ -10,20 +10,13 @@ html {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.app {
-    border-radius: 0 7px 0 7px;
-    width: 50%;
-    max-width: 500px;
-    margin: 10% auto;
-    background-color: rgba(238, 15, 15, 0.7);
-}
 
 .todo-list {
     width: 100%;
     max-width: 500px;
     margin: 10% auto;
+    margin-top: 20px;
 }
-
 
 .text {
     width: 70%;
@@ -57,9 +50,8 @@ button {
     padding: 12px 16px; /* Some padding */
     font-size: 16px; /* Set a font size */
     cursor: pointer; /* Mouse pointer on hover */
-  }
-  
+}
   /* Darker background on mouse-over */
-  button:hover {
+button:hover {
     background-color: RoyalBlue;
-  }
+}
