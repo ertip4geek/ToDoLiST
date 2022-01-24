@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-// import { shortid } from "shortid";
-import { nanoid } from "nanoid";
+// import createGuid from "react-native-create-guid";
 
 const Rest = () => {
 	let [task, setTask] = useState({ label: "", done: false, id: "" });
 	let [listItems, setListItems] = useState([]);
+	console.log("get", listItems);
 
-	const createUsers = () => {
-		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify([]),
-		}).then((response) => response.json());
+	const onClickRemoveTask = (indexToDelete) => {
+		let auxItems = listItems;
+		console.log("aux:", auxItems);
+		auxItems = auxItems.filter((x, y) => y != indexToDelete);
+		console.log("auxfilter:", auxItems);
+		setListItems(auxItems);
 	};
-
+	// pq ponemos fetch en useEffect??///
 	const getTodos = () => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
 			method: "GET",
@@ -21,49 +21,37 @@ const Rest = () => {
 		})
 			.then((response) => response.json())
 			.then((json) => {
-				json.msg ? createUsers() : setListItems(json);
+				setListItems(json);
 			});
-	};
-	///	// ??? async (e)??
-	const handleAddItem = async () => {
-		setListItems([...listItems, task]);
-		setTask("");
-		try {
-			const request = await fetch(
-				"https://assets.breatheco.de/apis/fake/todos/user/alex",
-				{
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(newList),
-				}
-			);
-			const response = await request.json();
-			console.log("response", response);
-		} catch (error) {
-			console.log(error);
-		}
-		setTask({ label: "" });
-	};
-
-	const onClickRemoveTask = (indexToDelete) => {
-		setListItems(listItems.filter((x, y) => y != indexToDelete));
-		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(arrayNew),
-			//arrayNew not defined
-		})
-			.then((response) => response.json())
-			.catch((err) => console.log(err));
 	};
 
 	useEffect(() => {
-		createUsers();
+		console.log(listItems);
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
+			method: "PUT",
+			body: JSON.stringify(listItems), // data can be a `string` or  an {object}
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				if (!res.ok) throw Error(res.statusText);
+				return res.json();
+			})
+			.then((response) => console.log("Success:", response))
+			.catch((error) => console.error(error));
+	}, [listItems]);
+
+	const handleAddItem = () => {
+		setListItems([...listItems, task]);
+	};
+
+	useEffect(() => {
 		getTodos();
 	}, []);
 
 	const onClickRemoveAll = () => {
-		setList([]);
+		setListItems([]);
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
 			method: "DELETE",
 			headers: { "Content-Type": "application/json" },
@@ -95,32 +83,32 @@ const Rest = () => {
 			<button className="button" onClick={handleAddItem}>
 				Add
 			</button>
-			<div className="todo-list">
+			<ul className="todo-list">
 				{listItems.map((item, index) => {
 					return (
-						<div key={index.id}>
+						<li key={index}>
 							<p>{item.label}</p>
 							<button>
 								{" "}
 								<i
 									className="fas fa-minus-circle right"
 									onClick={() =>
-										onClickRemoveTask(index.id)
+										onClickRemoveTask(index)
 									}></i>
 							</button>
-						</div>
+						</li>
 					);
 				})}
 				{listItems.length ? (
 					<p>
 						<button
 							className="button"
-							onClick={() => setListItems([])}>
+							onClick={() => onClickRemoveAll([])}>
 							Delete all tasks
 						</button>
 					</p>
 				) : null}
-			</div>
+			</ul>
 		</>
 	);
 };
