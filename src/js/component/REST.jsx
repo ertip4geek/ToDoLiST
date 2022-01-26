@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
-// import createGuid from "react-native-create-guid";
 
 const Rest = () => {
 	let [task, setTask] = useState({ label: "", done: false, id: "" });
 	let [listItems, setListItems] = useState([]);
 	console.log("get", listItems);
 
-	const onClickRemoveTask = (indexToDelete) => {
-		let auxItems = listItems;
-		console.log("aux:", auxItems);
-		auxItems = auxItems.filter((x, y) => y != indexToDelete);
-		console.log("auxfilter:", auxItems);
-		setListItems(auxItems);
-	};
-	// pq ponemos fetch en useEffect??///
-	const getTodos = () => {
+	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
 			method: "GET",
-			headers: { "Content-Type": "application/json" },
-		})
-			.then((response) => response.json())
-			.then((json) => {
-				setListItems(json);
-			});
-	};
-
+		}).then((response) => {
+			console.log(response.status);
+			if (response.status == 404) {
+				createUser("alex");
+			} else {
+				getTodos();
+			}
+		});
+	}, []);
+	// pq ponemos fetch en useEffect??///
 	useEffect(() => {
 		console.log(listItems);
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
@@ -42,23 +35,63 @@ const Rest = () => {
 			.catch((error) => console.error(error));
 	}, [listItems]);
 
-	const handleAddItem = () => {
-		setListItems([...listItems, task]);
-	};
-
-	useEffect(() => {
-		getTodos();
-	}, []);
-
-	const onClickRemoveAll = () => {
-		setListItems([]);
+	const getTodos = () => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
-			method: "DELETE",
+			method: "GET",
 			headers: { "Content-Type": "application/json" },
 		})
 			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((err) => console.log(err));
+			.then((json) => {
+				setListItems(json);
+			});
+	};
+	const onClickRemoveTask = (indexToDelete) => {
+		let auxItems = listItems;
+		console.log("aux:", auxItems);
+		auxItems = auxItems.filter((x, y) => y != indexToDelete);
+		console.log("auxfilter:", auxItems);
+		setListItems(auxItems);
+	};
+
+	const handleAddItem = () => {
+		console.log(task);
+		if (task.label != "") {
+			setListItems([...listItems, task]);
+			setTask({ label: "", done: false, id: "" });
+		} else {
+			alert("La tarea no puede estar en blanco");
+		}
+	};
+	const createUser = (user) => {
+		fetch(`https://assets.breatheco.de/apis/fake/todos/user/${user}`, {
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+			},
+			body: JSON.stringify([]),
+		})
+			.then((response) => response.json())
+			.then(() => getTodos());
+	};
+
+	// useEffect(() => {
+	// 	getTodos();
+	// }, []);
+
+	const onClickRemoveAll = () => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/alex", {
+			method: "PUT",
+			body: JSON.stringify([{ label: "sample task", done: false }]),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				if (!res.ok) throw Error(res.statusText);
+				return res.json();
+			})
+			.then(() => getTodos())
+			.catch((error) => console.error(error));
 	};
 
 	return (
@@ -67,7 +100,7 @@ const Rest = () => {
 				type="text"
 				className="text"
 				value={task.label}
-				onKeyPress={(e) => {
+				onKeyUp={(e) => {
 					if (e.key == "Enter") {
 						handleAddItem();
 					}
@@ -85,19 +118,21 @@ const Rest = () => {
 			</button>
 			<ul className="todo-list">
 				{listItems.map((item, index) => {
-					return (
-						<li key={index}>
-							<p>{item.label}</p>
-							<button>
-								{" "}
-								<i
-									className="fas fa-minus-circle right"
-									onClick={() =>
-										onClickRemoveTask(index)
-									}></i>
-							</button>
-						</li>
-					);
+					if (item.id == "") {
+						return (
+							<li key={index}>
+								<p>{item.label}</p>
+								<button>
+									{" "}
+									<i
+										className="fas fa-minus-circle right"
+										onClick={() =>
+											onClickRemoveTask(index)
+										}></i>
+								</button>
+							</li>
+						);
+					}
 				})}
 				{listItems.length ? (
 					<p>
